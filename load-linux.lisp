@@ -3,6 +3,7 @@
 (load "maze-test.lisp")
 
 (main)
+(sb-ext:exit)
 #|
 (sb-ext:save-lisp-and-die "mogerpg.exe"
 			  :toplevel #'main
