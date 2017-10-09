@@ -64,6 +64,7 @@
   (charms/ll:scrollok charms/ll:*stdscr* 1)
   (charms/ll:keypad charms/ll:*stdscr* 1)
   (charms/ll:raw)
+  (charms/ll:noecho)
   (exit-hooks:add-exit-hook #'charms/ll:endwin))
 
 ;;移動先選択
