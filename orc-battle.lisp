@@ -639,7 +639,8 @@
   (show-auto-heal p)
   (loop for i from 0 below (donjon-tate map) do
     (loop for j from 0 below (donjon-yoko map) do
-      (scr-format (map-type (aref (donjon-map map) i j)))
+	  (let ((char (map-type (aref (donjon-map map) i j))))
+	    (funcall (if (string-equal char "主") #'scr-format-reverse #'scr-format) char))
       (if (= j (- (donjon-yoko map) 1))
 	  (case i
 	    (0 (scr-format " 主:プレイヤーの位置~%"))

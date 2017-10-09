@@ -13,6 +13,11 @@
 (defun scr-format (&rest args)
   (cl-charms/low-level:addstr (apply #'format (append '(nil) args))))
 
+(defun scr-format-reverse (&rest args)
+  (cl-charms/low-level:attron cl-charms/low-level:A_REVERSE)
+  (cl-charms/low-level:addstr (apply #'format (append '(nil) args)))
+  (cl-charms/low-level:attroff cl-charms/low-level:A_REVERSE))
+
 ;; () -> sexp
 (defun read-command-char ()
   (let ((c (cl-charms/low-level:getch)))
