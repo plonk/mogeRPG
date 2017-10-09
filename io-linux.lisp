@@ -3,29 +3,29 @@
 (ql:quickload :flexi-streams)
 
 (defun scr-fresh-line ()
-  (let ((x (cl-charms/low-level:getcurx cl-charms/low-level:*stdscr*)))
+  (let ((x (charms/ll:getcurx charms/ll:*stdscr*)))
     (if (/= 0 x)
-        (cl-charms/low-level:addstr (format nil "~%")))))
+        (charms/ll:addstr (format nil "~%")))))
 
 (defun scr-princ (obj)
-  (cl-charms/low-level:addstr (format nil "~A" obj)))
+  (charms/ll:addstr (format nil "~A" obj)))
 
 (defun scr-format (&rest args)
-  (cl-charms/low-level:addstr (apply #'format (append '(nil) args))))
+  (charms/ll:addstr (apply #'format (append '(nil) args))))
 
 (defun scr-format-reverse (&rest args)
-  (cl-charms/low-level:attron cl-charms/low-level:A_REVERSE)
-  (cl-charms/low-level:addstr (apply #'format (append '(nil) args)))
-  (cl-charms/low-level:attroff cl-charms/low-level:A_REVERSE))
+  (charms/ll:attron charms/ll:A_REVERSE)
+  (charms/ll:addstr (apply #'format (append '(nil) args)))
+  (charms/ll:attroff charms/ll:A_REVERSE))
 
 ;; () -> sexp
 (defun read-command-char ()
-  (let ((c (cl-charms/low-level:getch)))
+  (let ((c (charms/ll:getch)))
     (cond
-      ((= c cl-charms/low-level:KEY_UP)    (setf c (char-code #\w)))
-      ((= c cl-charms/low-level:KEY_LEFT)  (setf c (char-code #\a)))
-      ((= c cl-charms/low-level:KEY_DOWN)  (setf c (char-code #\s)))
-      ((= c cl-charms/low-level:KEY_RIGHT) (setf c (char-code #\d))))
+      ((= c charms/ll:KEY_UP)    (setf c (char-code #\w)))
+      ((= c charms/ll:KEY_LEFT)  (setf c (char-code #\a)))
+      ((= c charms/ll:KEY_DOWN)  (setf c (char-code #\s)))
+      ((= c charms/ll:KEY_RIGHT) (setf c (char-code #\d))))
     (if (and (<= 0 c) (<= c 127)) ; ascii range
         (let ((char (code-char c)))
           (if (or
@@ -40,10 +40,10 @@
   (let ((buf (make-array 0 :adjustable t :fill-pointer 0)))
     (labels
         ((add-char ()
-                   (let ((code (cl-charms/low-level:getch)))
+                   (let ((code (charms/ll:getch)))
                      (cond
 		       ((= code 10)
-			(cl-charms/low-level:scrl 1)
+			(charms/ll:scrl 1)
 			(flexi-streams:octets-to-string buf :external-format :utf-8))
 		       (t
 			 (vector-push-extend code buf)
@@ -59,12 +59,12 @@
   (gets))
 
 (defun init-charms ()
-  (cl-charms/low-level:initscr)
+  (charms/ll:initscr)
   (charms/ll:clearok charms/ll:*stdscr* 1)
-  (cl-charms/low-level:scrollok cl-charms/low-level:*stdscr* 1)
-  (cl-charms/low-level:keypad cl-charms/low-level:*stdscr* 1)
-  (cl-charms/low-level:raw)
-  (exit-hooks:add-exit-hook #'cl-charms/low-level:endwin))
+  (charms/ll:scrollok charms/ll:*stdscr* 1)
+  (charms/ll:keypad charms/ll:*stdscr* 1)
+  (charms/ll:raw)
+  (exit-hooks:add-exit-hook #'charms/ll:endwin))
 
 ;;移動先選択
 (defun map-move (map p)
