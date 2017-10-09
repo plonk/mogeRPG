@@ -186,7 +186,7 @@
   (<= (player-hp p) 0))
 ;;プレイヤーのステータス表示(バトル時)
 (defun show-player (p)
-  (scr-format "~%ステータス: Lv ~d, HP ~d, 素早さ ~d, 力 ~d, Exp ~d~%"
+  (scr-format "~%ステータス: Lv ~d, HP ~d, 力 ~d, 素早さ ~d, Exp ~d~%"
           (player-level p) (player-hp p) (player-agi p) (player-str p) (player-exp p)) 
   (scr-format "持ち物: 回復薬 ~d個, ハンマー ~d個~%" (player-heal p) (player-hammer p)))
 ;;
