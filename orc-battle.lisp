@@ -83,20 +83,22 @@
 	       (scr-format "(番号を選んでね)~%")
 	       (scr-format "1:HP ~d 2:力 ~d 3:素早さ ~d~%"
 			   (player-maxhp p) (player-maxstr p) (player-maxagi p))
-	       (let ((x (read-command-char)))
-		 (scr-fresh-line)
-		 (case x
-		   (1
-		    (incf (player-maxhp p))
-		    (hoge (1- n)))
-		   (2
-		    (incf (player-maxstr p))
-		    (hoge (1- n)))
-		   (3
-		    (incf (player-maxagi p))
-		    (hoge (1- n)))
-		   (otherwise
-		    (hoge n))))))))
+	       (labels ((fuga ()
+                            (let ((x (read-command-char)))
+			      (scr-fresh-line)
+			      (case x
+				    (1
+				     (incf (player-maxhp p))
+				     (hoge (1- n)))
+				    (2
+				     (incf (player-maxstr p))
+				     (hoge (1- n)))
+				    (3
+				     (incf (player-maxagi p))
+				     (hoge (1- n)))
+				    (otherwise
+				     (fuga))))))
+		     (fuga))))))
     (loop while (>= (player-exp p) *lv-exp*) do
       (let ((point (randval 3)))
 	(scr-format "「レベルアップ！ステータスポイントを~d獲得しました。」~%" point)
@@ -184,9 +186,9 @@
   (<= (player-hp p) 0))
 ;;プレイヤーのステータス表示(バトル時)
 (defun show-player (p)
-  (scr-format "~%あなたのステータス:Lv ~d, HP ~d, 素早さ ~d, 力 ~d, exp ~d~%"
+  (scr-format "~%ステータス: Lv ~d, HP ~d, 素早さ ~d, 力 ~d, Exp ~d~%"
           (player-level p) (player-hp p) (player-agi p) (player-str p) (player-exp p)) 
-  (scr-format "持ち物:回復薬 ~d個,ハンマー~d個~%" (player-heal p) (player-hammer p)))
+  (scr-format "持ち物: 回復薬 ~d個, ハンマー ~d個~%" (player-heal p) (player-hammer p)))
 ;;
 (defun atack-p (p x)
   (let ((m (pick-monster p)))
@@ -195,25 +197,26 @@
 (defun player-attack (p)
   (scr-fresh-line)
   ;;(show-player p)
-  (scr-format "攻撃方法: [z]突く [x]ダブルスウィング [c]なぎ払う [v]待機 [q]回復薬を使う:~%")
-  (case (read-command-char)
-    (z (atack-p p (+ 2 (randval (ash (player-str p) -1)))))
-    (x (let ((x (randval (truncate (/ (player-str p) 6)))))
-	 (scr-format "~%ダブルスウィングのダメージは ~d~%" x)
-	 (atack-p p x)
-	 (unless (monsters-dead)
-           (scr-format "~%2体目のモンスターを選んでください~%")
-	   (atack-p p x))))
-    (c
-     (dotimes (x (1+ (randval (truncate (/ (player-str p) 3)))))
-       (unless (monsters-dead)
-	 (monster-hit2 p (random-monster) 1))))
-    (v
-     (scr-fresh-line))
-    (q (use-heal p))
-    (otherwise
-     (scr-format "z,x,c,v,qの中から選んでください！~%")
-     (player-attack p))))
+  (scr-format "攻撃方法: [z]突く [x]ダブルスウィング [c]なぎ払う [v]待機 [q]回復薬:~%")
+  (labels ((interact ()
+		     (case (read-command-char)
+			   (z (atack-p p (+ 2 (randval (ash (player-str p) -1)))))
+			   (x (let ((x (randval (truncate (/ (player-str p) 6)))))
+				(scr-format "~%ダブルスウィングのダメージは ~d~%" x)
+				(atack-p p x)
+				(unless (monsters-dead)
+				  (scr-format "~%2体目のモンスターを選んでください~%")
+				  (atack-p p x))))
+			   (c
+			    (dotimes (x (1+ (randval (truncate (/ (player-str p) 3)))))
+			      (unless (monsters-dead)
+				(monster-hit2 p (random-monster) 1))))
+			   (v
+			    (scr-fresh-line))
+			   (q (use-heal p))
+			   (otherwise
+			    (interact)))))
+	  (interact)))
 
 ;;n内の１以上の乱数
 (defun randval (n)
@@ -551,8 +554,8 @@
 ;;オート回復薬メッセージ
 (defun show-auto-heal (p)
   (if (null (player-auto-heal p))
-      (scr-format "オート回復薬 = OFF~%")
-      (scr-format "オート回復薬 = HPが~d%以下で回復~%" (player-auto-heal p))))
+      (scr-format "オート回復薬[f]: OFF~%")
+      (scr-format "オート回復薬[f]: HPが~d%以下で回復~%" (player-auto-heal p))))
 
 ;;文字幅取得
 (defun moge-char-width (char)
@@ -623,7 +626,7 @@
     (0  "　")
     (1  "主") ;; プレイヤーの位置
     (4  "薬") ;; 薬
-    (5  "ボ") ;;ボス
+    (5  "ボ") ;; ボス
     (3  "宝") ;; 宝箱
     (2  "下") ;; 下り階段
     (6  "イ") ;; イベント
@@ -635,7 +638,7 @@
   (gamen-clear)
   (scr-format "地下~d階~%" (player-map p))
   (show-player p)
-  (scr-format "現在の武器:~a~%" (first (player-buki p)))
+  (scr-format "武器[i]: ~a~%" (first (player-buki p)))
   (show-auto-heal p)
   (loop for i from 0 below (donjon-tate map) do
     (loop for j from 0 below (donjon-yoko map) do
@@ -643,7 +646,7 @@
 	    (funcall (if (string-equal char "主") #'scr-format-reverse #'scr-format) char))
       (if (= j (- (donjon-yoko map) 1))
 	  (case i
-	    (0 (scr-format " 主:プレイヤーの位置~%"))
+	    (0 (scr-format " 主:プレイヤー~%"))
 	    (2 (scr-format " 宝:宝箱~%"))
 	    (1 (scr-format " 下:下り階段~%"))
 	    (3 (scr-format " 薬:回復薬~%"))
@@ -718,14 +721,19 @@
 
 ;;壁破壊
 (defun kabe-break (map p y x)
-  (scr-format "「ハンマーで壁を壊しますか？」[yes=z or no=anykey]:~%")
-  (case (read-command-char)
-    (z
-      (if (>= (random 10) 3)
-	(setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 0)
-	(setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 3))
-     (decf (player-hammer p)))))
-     ;;(scr-format "「壁を壊しました。」~%"))))
+  (scr-format "「ハンマーで壁を壊しますか？」[yes=z or no=x]:~%")
+  (labels ((interact ()
+		     (case (read-command-char)
+			   (z
+			    (if (>= (random 10) 3)
+				(setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 0)
+			      (setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 3))
+			    (decf (player-hammer p)))
+			   (x
+			    nil)
+			   (otherwise
+			    (interact)))))
+	  (interact)))
 
 ;;武器装備してステータス更新
 (defun equip-buki (item p)
