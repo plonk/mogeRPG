@@ -55,7 +55,7 @@
 
 ;;コンティニューメッセージ
 (defun continue-message ()
-  (scr-format "もう一度挑戦しますか？(yes=1 or no=2)~%")
+  (scr-format "もう一度挑戦しますか？  Yes[1]  No[2]~%")
   (case (read-command-char)
     (1 (main))
     (2 nil)
@@ -588,7 +588,7 @@
 		      (number->a x) (minimum-column 18 (first buki)) (second buki)
 		      (third buki) (fourth buki)))
   (scr-format "アルファベットを選ぶと装備します~%")
-  (scr-format "[z]戻る")
+  (scr-format "戻る[z]")
   (let ((x (ascii->number (read-command-char))))
     (cond
       ((and (integerp x) (<= 0 x 24) (< x (length (player-item p))))
@@ -727,7 +727,7 @@
 
 ;;壁破壊
 (defun kabe-break (map p y x)
-  (scr-format "「ハンマーで壁を壊しますか？」Yes[z]  No[x]~%")
+  (scr-format "「ハンマーで壁を壊しますか？」 Yes[z]  No[x]~%")
   (labels ((interact ()
 		     (case (read-command-char)
 			   (z
@@ -769,7 +769,7 @@
 		str2 (format-diff (- str2 str1))
 		hp2 (format-diff (- hp2 hp1))
 		agi2 (format-diff (- agi2 agi1)))))
-  (scr-format "「装備しますか？」装備[z]  捨てる[x]  袋にしまう[c]~%")
+  (scr-format "装備[z]  捨てる[x]  袋にしまう[c]~%")
   (labels ((interact
 	    ()
 	    (case (read-command-char)
@@ -994,7 +994,7 @@
 ;; メッセージ message を表示し、ユーザーから 1 あるいは 2 を受け取る。
 ;; 1 を受け取れば t を、2を受け取れば nil を返す。それ以外はループ
 (defun yes-no-dialog (message)
-  (scr-format "~a Yes[1]  No[2]~%" message)
+  (scr-format "~a  Yes[1]  No[2]~%" message)
   (case (read-command-char)
     (1 t)
     (2 nil)
