@@ -657,7 +657,6 @@
             (1 (scr-format " 回復薬    ~d個~%" (player-heal p)))
             (2 (scr-format " ハンマー  ~d個~%" (player-hammer p)))
 	    (3 (scr-format " Exp       ~d/~d~%" (player-exp p) *lv-exp*))
-            (4 (scr-format " ") (show-auto-heal p))
 	    (6 (scr-format " 薬を使う[q]~%"))
 	    (7 (scr-format " 終わる[r]~%"))
 	(otherwise (scr-fresh-line))))))

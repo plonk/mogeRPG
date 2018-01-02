@@ -79,7 +79,6 @@
 			   ((d l 6) (update-map map p 0 1))
 			   ((a h 4) (update-map map p 0 -1))
 			   (q (use-heal p))
-			   (f (auto-heal-config p))
 			   (i (show-item p))
 			   (r (setf *end* 2))
 			   (otherwise
