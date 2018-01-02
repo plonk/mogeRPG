@@ -922,7 +922,7 @@
 ;; する。通路でなかった場合は、その方向に普通に移動しようとしたように
 ;; 振る舞う。
 (defun update-map-dash (map p y x &optional (first-move? t))
-  (case (aref map (+ (player-posy p) y) (+ (player-posx p) x))
+  (case (aref (donjon-map map) (+ (player-posy p) y) (+ (player-posx p) x))
     (0
      (update-map map p y x)
      (unless *battle?*
