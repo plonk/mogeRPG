@@ -918,6 +918,18 @@
      (update-player-pos p x y (donjon-map map))
      (if (= (randval 13) 1) ;;敵との遭遇確率
 	 (setf *battle?* t)))))
+;; (x,y) の方向が通路だった場合は、何かに当たるか敵と遭遇するまで移動
+;; する。通路でなかった場合は、その方向に普通に移動しようとしたように
+;; 振る舞う。
+(defun update-map-dash (map p y x &optional (first-move? t))
+  (case (aref map (+ (player-posy p) y) (+ (player-posx p) x))
+    (0
+     (update-map map p y x)
+     (unless *battle?*
+       (update-map-dash map p y x nil)))
+    (otherwise
+     (when first-move?
+       (update-map map p y x)))))
 ;;薬を使う
 (defun use-heal (p)
   (cond

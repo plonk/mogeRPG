@@ -29,18 +29,6 @@
 	(player-str p)    999
 	(player-maxstr p) 999))
 
-;; (x,y) の方向が通路だった場合は、何かに当たるか敵と遭遇するまで移動
-;; する。通路でなかった場合は、その方向に普通に移動しようとしたように
-;; 振る舞う。
-(defun update-map-dash (map p y x &optional (first-move? t))
-  (case (aref map (+ (player-posy p) y) (+ (player-posx p) x))
-    (0
-     (update-map map p y x)
-     (unless *battle?*
-       (update-map-dash map p y x nil)))
-    (otherwise
-     (when first-move?
-       (update-map map p y x)))))
 #|
 ;;移動先選択
 (defun map-move (map p)
