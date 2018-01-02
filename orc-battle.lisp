@@ -130,6 +130,8 @@
      (init-monsters p)))
   (game-loop p) ;;バトルループ
   (gamen-clear)
+  (show-player p)
+  (print-header "敵が現れた！")
   (show-monsters2)
   (scr-format "~%~%")
   (cond
@@ -159,6 +161,11 @@
 	 (margin-width (truncate (- 78 w) 2))
 	 (space (make-string margin-width :initial-element #\Space)))
     (scr-format-reverse "~A~A~A~%" space str space)))
+(defun print-header-styled (styles str)
+  (let* ((w (string-width str))
+	 (margin-width (truncate (- 78 w) 2))
+	 (space (make-string margin-width :initial-element #\Space)))
+    (scr-format-styled styles "~A~A~A~%" space str space)))
   
 ;;バトル時、プレイヤーが死ぬかモンスターが全滅するまでループ
 (defun game-loop (p)
@@ -177,15 +184,22 @@
     (cond 
       ((null (monsters-dead))
        (gamen-clear)
-       (show-monsters2)
        (show-player p)
-       (print-header "敵のターン")
+       (print-header "敵が現れた！")
+       (show-monsters2)
+       (scr-format-reverse "~%--次へ--~%")
+       (read-command-char)
+
+       (gamen-clear)
+       (show-player p)
+       (print-header-styled '(:warning) "敵のターン")
        (map 'list
             (lambda (m)
               (or (monster-dead m) (monster-attack m p)))
             *monsters*)
        (scr-format-reverse "~%--次へ--~%")
        (read-command-char)
+
        (game-loop p)))))
 
 ;;プレイヤーの生死判定

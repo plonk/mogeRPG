@@ -24,6 +24,7 @@
     (:cyan    (charms/ll:color-pair +cyan+))
     (:white   (charms/ll:color-pair +white+))
     (:bold charms/ll:A_BOLD)
+    (:warning (charms/ll:color-pair +warning+))
     (otherwise (error (format nil "unknown style: ~A" style)))))
 
 (defun scr-format-styled (styles &rest args)
@@ -94,6 +95,7 @@
 (defconstant +magenta+ 5)
 (defconstant +cyan+    6)
 (defconstant +white+   7)
+(defconstant +warning+   8)
 
 (defun init-charms ()
   (charms/ll:initscr)
@@ -114,6 +116,7 @@
   (charms/ll:init-pair +magenta+ charms/ll:COLOR_MAGENTA charms/ll:COLOR_BLACK)
   (charms/ll:init-pair +cyan+    charms/ll:COLOR_CYAN    charms/ll:COLOR_BLACK)
   (charms/ll:init-pair +white+   charms/ll:COLOR_WHITE   charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +warning+ charms/ll:COLOR_WHITE   charms/ll:COLOR_RED)
   (exit-hooks:add-exit-hook #'charms/ll:endwin))
 
 ;;移動先選択
