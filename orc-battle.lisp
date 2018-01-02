@@ -654,7 +654,8 @@
 ;;マップ表示
 (defun show-map (map p)
   (gamen-clear)
-  (scr-format "地下~d階   " (player-map p))
+  (scr-format "  ~d " (player-map p))
+  (scr-format-styled '(:blue :bold) "階  ")
   (show-player p)
   (scr-format "~%")
   (loop for i from 0 below (donjon-tate map) do
