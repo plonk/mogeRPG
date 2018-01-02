@@ -641,6 +641,16 @@
     (7  "ハ") ;; 中ボス ハツネツエリア
     ))
 
+(defun char-style (char)
+  (case (aref char 0)
+    (#\主 '(:cyan :bold))
+    (#\下 '())
+    (#\宝 '(:yellow))
+    (#\ハ '(:magenta :bold))
+    (#\ボ '(:magenta :bold))
+    (#\イ '(:blue :bold))
+    (otherwise '())))
+
 ;;マップ表示
 (defun show-map (map p)
   (gamen-clear)
@@ -648,18 +658,18 @@
   (show-player p)
   (scr-format "~%")
   (loop for i from 0 below (donjon-tate map) do
-    (loop for j from 0 below (donjon-yoko map) do
-	  (let ((char (map-type (aref (donjon-map map) i j))))
-	    (funcall (if (string-equal char "主") #'scr-format-reverse #'scr-format) char))
-      (if (= j (- (donjon-yoko map) 1))
-	  (case i
-            (0 (scr-format " 武器[i]   ~a~%" (first (player-buki p))))
-            (1 (scr-format " 回復薬    ~d個~%" (player-heal p)))
-            (2 (scr-format " ハンマー  ~d個~%" (player-hammer p)))
-	    (3 (scr-format " Exp       ~d/~d~%" (player-exp p) *lv-exp*))
-	    (6 (scr-format " 薬を使う[q]~%"))
-	    (7 (scr-format " 終わる[r]~%"))
-	(otherwise (scr-fresh-line))))))
+        (loop for j from 0 below (donjon-yoko map) do
+              (let ((char (map-type (aref (donjon-map map) i j))))
+                (scr-format-styled (char-style char) char))
+              (if (= j (- (donjon-yoko map) 1))
+                  (case i
+                    (0 (scr-format " 武器[i]   ~a~%" (first (player-buki p))))
+                    (1 (scr-format " 回復薬    ~d個~%" (player-heal p)))
+                    (2 (scr-format " ハンマー  ~d個~%" (player-hammer p)))
+                    (3 (scr-format " Exp       ~d/~d~%" (player-exp p) *lv-exp*))
+                    (6 (scr-format " 薬を使う[q]~%"))
+                    (7 (scr-format " 終わる[r]~%"))
+                    (otherwise (scr-fresh-line))))))
   (show-msg p))
 #|
 ;;マップ表示 視界制限ver

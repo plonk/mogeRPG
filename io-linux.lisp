@@ -13,6 +13,27 @@
 (defun scr-format (&rest args)
   (charms/ll:addstr (apply #'format (append '(nil) args))))
 
+(defun style->attr (style)
+  (case style
+    (:black   (charms/ll:color-pair +black+))
+    (:red     (charms/ll:color-pair +red+))
+    (:green   (charms/ll:color-pair +green+))
+    (:yellow  (charms/ll:color-pair +yellow+))
+    (:blue    (charms/ll:color-pair +blue+))
+    (:magenta (charms/ll:color-pair +magenta+))
+    (:cyan    (charms/ll:color-pair +cyan+))
+    (:white   (charms/ll:color-pair +white+))
+    (:bold charms/ll:A_BOLD)
+    (otherwise (error (format nil "unknown style: ~A" style)))))
+
+(defun scr-format-styled (styles &rest args)
+  (if (null styles)
+      (charms/ll:addstr (apply #'format (append '(nil) args)))
+    (progn
+      (charms/ll:attron (style->attr (car styles)))
+      (apply #'scr-format-styled (cons (cdr styles) args))
+      (charms/ll:attroff (style->attr (car styles))))))
+
 (defun scr-format-reverse (&rest args)
   (charms/ll:attron charms/ll:A_REVERSE)
   (charms/ll:addstr (apply #'format (append '(nil) args)))
@@ -58,6 +79,16 @@
 (defun read-string ()
   (gets))
 
+
+(defconstant +black+   0)
+(defconstant +red+     1)
+(defconstant +green+   2)
+(defconstant +yellow+  3)
+(defconstant +blue+    4)
+(defconstant +magenta+ 5)
+(defconstant +cyan+    6)
+(defconstant +white+   7)
+
 (defun init-charms ()
   (charms/ll:initscr)
   (charms/ll:clearok charms/ll:*stdscr* 1)
@@ -65,6 +96,18 @@
   (charms/ll:keypad charms/ll:*stdscr* 1)
   (charms/ll:raw)
   (charms/ll:noecho)
+  (unless (= 1 (charms/ll:has-colors))
+    (print "Error: color support not available")
+    (sb-ext:exit))
+  (charms/ll:start-color)
+  (charms/ll:init-pair +black+   charms/ll:COLOR_BLACK   charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +red+     charms/ll:COLOR_RED     charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +green+   charms/ll:COLOR_GREEN   charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +yellow+  charms/ll:COLOR_YELLOW  charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +blue+    charms/ll:COLOR_BLUE    charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +magenta+ charms/ll:COLOR_MAGENTA charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +cyan+    charms/ll:COLOR_CYAN    charms/ll:COLOR_BLACK)
+  (charms/ll:init-pair +white+   charms/ll:COLOR_WHITE   charms/ll:COLOR_BLACK)
   (exit-hooks:add-exit-hook #'charms/ll:endwin))
 
 ;;移動先選択
