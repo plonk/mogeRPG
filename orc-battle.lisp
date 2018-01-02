@@ -75,14 +75,10 @@
              (if (= n 0)
                  (progn (setf (player-hp p) (player-maxhp p)
                               (player-str p) (player-maxstr p)
-                              (player-agi p) (player-maxagi p))
-                        (scr-format "1:HP ~d 2:力 ~d 3:素早さ ~d~%"
-                                    (player-maxhp p) (player-maxstr p) (player-maxagi p)))
+                              (player-agi p) (player-maxagi p)))
                (progn
-                 (scr-format "ポイントを振り分けてください。残り~dポイント~%" n)
-                 (scr-format "(番号を選んでね)~%")
-                 (scr-format "1:HP ~d 2:力 ~d 3:素早さ ~d~%"
-                             (player-maxhp p) (player-maxstr p) (player-maxagi p))
+                 (scr-format "~%ポイントを振り分けてください。残り~dポイント~%" n)
+                 (print-stats p)
                  (labels ((fuga ()
                                 (let ((x (read-command-char)))
                                   (scr-fresh-line)
@@ -98,14 +94,20 @@
                                      (hoge (1- n)))
                                     (otherwise
                                      (fuga))))))
-                   (fuga))))))
-    (loop while (>= (player-exp p) *lv-exp*) do
+                   (fuga)))))
+       (print-stats (p)
+                    (scr-format "HP[1] ~d  力[2] ~d  素早さ[3] ~d~%"
+                                (player-maxhp p) (player-maxstr p) (player-maxagi p))))
+       (loop while (>= (player-exp p) *lv-exp*) do
           (let ((point (randval 3)))
             (scr-format "「レベルアップ！ステータスポイントを~d獲得しました。」~%" point)
             (hoge point)
+            (scr-format "~%")
             (decf (player-exp p) *lv-exp*)
             (incf (player-level p))
-            (incf *lv-exp* 10)))))
+            (incf *lv-exp* 10)
+            (show-player p)
+            (scr-format "~%")))))
 
 ;;戦闘終了後アイテム入手
 (defun item-drop? (p)
