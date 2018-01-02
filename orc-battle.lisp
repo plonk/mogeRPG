@@ -669,7 +669,7 @@
 (defun show-map (map p)
   (gamen-clear)
   (scr-format "  ~d " (player-map p))
-  (scr-format-styled '(:blue :bold) "階  ")
+  (scr-format-styled '() "階  ")
   (show-player p)
   (scr-format "~%")
   (loop for i from 0 below (donjon-tate map) do
