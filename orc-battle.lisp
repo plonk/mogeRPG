@@ -1,3 +1,5 @@
+(use-package :io)
+
 (load "item.lisp" :external-format :utf-8)
 
 (defparameter *tate* 11) ;;マップサイズ
@@ -1036,3 +1038,30 @@
                (ranking-show ranking1 name)
                ranking1))))))
     (init-charms)))
+
+;;移動先選択
+(defun map-move (map p)
+  (unless (or *battle?* (= *end* 2))
+    ;;(show-fog-map map p)
+    (show-map map p)
+    (labels ((interact ()
+                       (case (read-character)
+                         ((#\w #\k #\8) (update-map map p -1 0))
+                         ((#\s #\j #\2) (update-map map p 1 0))
+                         ((#\d #\l #\6) (update-map map p 0 1))
+                         ((#\a #\h #\4) (update-map map p 0 -1))
+                         ((#\W #\K) (update-map-dash map p -1 0))
+                         ((#\S #\J) (update-map-dash map p 1 0))
+                         ((#\D #\L) (update-map-dash map p 0 1))
+                         ((#\A #\H) (update-map-dash map p 0 -1))
+                         (#\q (use-heal p))
+                         (#\i (show-item p))
+                         (#\r (setf *end* 2))
+                         (otherwise
+                          (interact)))))
+	  (interact))
+    (map-move map p)))
+
+(defun show-map-key ()
+  (scr-format "[q]薬を使う [r]終わる: ~%"))
+
