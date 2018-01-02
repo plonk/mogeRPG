@@ -55,10 +55,10 @@
 
 ;;コンティニューメッセージ
 (defun continue-message ()
-  (scr-format "もう一度挑戦しますか？  Yes[1]  No[2]~%")
+  (scr-format "もう一度挑戦しますか？  Yes[z]  No[x]~%")
   (case (read-command-char)
-    (1 (main))
-    (2 nil)
+    (z (main))
+    (x nil)
     (otherwise (continue-message))))
 ;;ゲームオーバーメッセージ
 (defun game-over-message (p)
@@ -1017,10 +1017,10 @@
 ;; メッセージ message を表示し、ユーザーから 1 あるいは 2 を受け取る。
 ;; 1 を受け取れば t を、2を受け取れば nil を返す。それ以外はループ
 (defun yes-no-dialog (message)
-  (scr-format "~a  Yes[1]  No[2]~%" message)
+  (scr-format "~a  Yes[z]  No[x]~%" message)
   (case (read-command-char)
-    (1 t)
-    (2 nil)
+    (z t)
+    (x nil)
     (otherwise (yes-no-dialog message))))
 
 ;; クリア記録 total-seconds をランキングファイルへ登録時のダイアログ。
