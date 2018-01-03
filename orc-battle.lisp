@@ -408,7 +408,7 @@
 ;;--------中ボス------------------------------------------------------------------------
 (defstruct (ha2ne2 (:include monster)) (h-atk 8))
 (defmethod monster-show ((m ha2ne2))
-  (scr-format-styled '(:magenta :bold) "ボス：ハツネツエリア"))
+  (scr-format-styled '(:boss :bold) "ボス：ハツネツエリア"))
 (defmethod monster-attack ((m ha2ne2) (p player))
   (let ((x (+ 3 (randval (+ (player-level p) (ha2ne2-h-atk m))))))
     (case (random 3)
@@ -432,7 +432,7 @@
 ;;--------ボス------------------------------------------------------------------------
 (defstruct (boss (:include monster)) (boss-atk 10))
 (defmethod monster-show ((m boss))
-  (scr-format-styled '(:magenta :bold) "ボス：もげぞう"))
+  (scr-format-styled '(:boss :bold) "ボス：もげぞう"))
 (defmethod monster-attack ((m boss) (p player))
   (let ((x (+ 5 (randval (+ (player-level p) (boss-boss-atk m))))))
     (case (random 5)
@@ -467,7 +467,7 @@
 ;;(push #'make-yote1 *monster-builders*)
 
 (defmethod monster-show ((m yote1))
-  (scr-format-styled '(:blue :bold) "メタルヨテイチ"))
+  (scr-format-styled '(:level_1 :bold) "メタルヨテイチ"))
 
 (defmethod monster-attack ((m yote1) (p player))
   (let ((atk (randval (yote1-atk m))))
@@ -493,10 +493,10 @@
 (defmethod monster-show ((m orc))
   (let ((x (orc-club-level m)))
     (cond
-     ((>= 3 x 1) (scr-format-styled '(:blue :bold) "か弱いオーク"))
-     ((>= 6 x 4) (scr-format-styled '(:green :bold) "日焼けしたオーク"))
-     ((>= 9 x 7) (scr-format-styled '(:yellow :bold) "邪悪なオーク"))
-     (t          (scr-format-styled '(:red :bold) "マッチョオーク")))))
+     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "か弱いオーク"))
+     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "日焼けしたオーク"))
+     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "邪悪なオーク"))
+     (t          (scr-format-styled '(:level_4 :bold) "マッチョオーク")))))
 
 (defmethod monster-attack ((m orc) (p player))
   (let ((x (randval (orc-club-level m))))
@@ -511,10 +511,10 @@
 (defmethod monster-show ((m hydra))
   (let ((x (monster-health m)))
     (cond
-     ((>= 3 x 1) (scr-format-styled '(:blue :bold) "意地悪なヒドラ"))
-     ((>= 6 x 4) (scr-format-styled '(:green :bold) "腹黒いヒドラ"))
-     ((>= 9 x 7) (scr-format-styled '(:yellow :bold) "強欲なヒドラ"))
-     (t          (scr-format-styled '(:red :bold) "グレートヒドラ")))))
+     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "意地悪なヒドラ"))
+     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "腹黒いヒドラ"))
+     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "強欲なヒドラ"))
+     (t          (scr-format-styled '(:level_4 :bold) "グレートヒドラ")))))
 
 (defmethod monster-attack ((m hydra) (p player))
   (let ((x (randval (ash (monster-health m) -1))))
@@ -532,10 +532,10 @@
 (defmethod monster-show ((m slime-mold))
   (let ((x (slime-mold-sliminess m)))
     (cond
-     ((<= 1 x 3) (scr-format-styled '(:blue :bold) "ベタベタなスライム"))
-     ((<= 4 x 6) (scr-format-styled '(:green :bold) "ベトベトなスライム"))
-     ((<= 7 x 9) (scr-format-styled '(:yellow :bold) "ベチョベチョなスライム"))
-     (t          (scr-format-styled '(:red :bold) "ヌルヌルなスライム")))))
+     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "ベタベタなスライム"))
+     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "ベトベトなスライム"))
+     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "ベチョベチョなスライム"))
+     (t          (scr-format-styled '(:level_4 :bold) "ヌルヌルなスライム")))))
 
 (defmethod monster-attack ((m slime-mold) (p player))
   (let ((x (randval (slime-mold-sliminess m))))
@@ -561,10 +561,10 @@
 (defmethod monster-show ((m brigand))
   (let ((x (brigand-atk m)))
     (cond
-     ((<= 1 x 3) (scr-format-styled '(:blue :bold) "毛の薄いブリガンド"))
-     ((<= 4 x 6) (scr-format-styled '(:green :bold) "ひげもじゃなブリガンド"))
-     ((<= 7 x 9) (scr-format-styled '(:yellow :bold) "胸毛の濃いブリガンド"))
-     (t          (scr-format-styled '(:red :bold) "禿げてるブリガンド")))))
+     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "毛の薄いブリガンド"))
+     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "ひげもじゃなブリガンド"))
+     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "胸毛の濃いブリガンド"))
+     (t          (scr-format-styled '(:level_4 :bold) "禿げてるブリガンド")))))
 
 (defmethod monster-attack ((m brigand) (p player))
   (let ((x (max (player-hp p) (player-agi p) (player-str p)))
