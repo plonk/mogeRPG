@@ -16,7 +16,9 @@
            :scr-format-reverse
            :scr-format-styled
            :scr-fresh-line
-           :scr-princ))
+           :scr-princ
+           :flush-input
+           :refresh-screen))
 
 (in-package :io)
 
@@ -143,3 +145,9 @@
 
 (defun endo-win ()
   (endwin))
+
+(defun flush-input ()
+  (flushinp))
+
+(defun refresh-screen ()
+  (refresh))

@@ -65,9 +65,12 @@
 
 ;;ゲームオーバーメッセージ
 (defun game-over-message (p)
-  (scr-format "Game Over.~%")
+  (gamen-clear)
+  (print-header-styled '(:warning) "🕆 Game Over 🕆")
   (scr-format "あなたは地下~d階で力尽きた。~%" (player-map p))
-  ;;(ranking-dialog 0) ;;テスト用
+  (io:refresh-screen)
+  (sleep 1)
+  (io:flush-input)
   (continue-message))
 
 ;;戦闘終了後レベルアップ
