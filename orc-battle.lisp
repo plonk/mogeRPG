@@ -1023,7 +1023,6 @@
     (endo-win)
     (fresh-line)
     (format t "~%名前を教えてください：~%")
-    ;;(scr-format "名前を入力してください:~%")
     (let ((name (read-line)))
       (ranking-transaction
        (lambda (ranking)
@@ -1042,7 +1041,6 @@
 ;;移動先選択
 (defun map-move (map p)
   (unless (or *battle?* (= *end* 2))
-    ;;(show-fog-map map p)
     (show-map map p)
     (labels ((interact ()
                        (case (read-character)
