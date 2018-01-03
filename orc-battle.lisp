@@ -672,7 +672,7 @@
 (defun char-style (char)
   (case (aref char 0)
     (#\主 '(:cyan :bold))
-    (#\下 '())
+    (#\下 '(:green))
     (#\宝 '(:yellow))
     (#\ハ '(:magenta :bold))
     (#\ボ '(:magenta :bold))
