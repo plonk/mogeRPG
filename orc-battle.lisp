@@ -692,7 +692,7 @@
                 (scr-format-styled (char-style char) char))
               (if (= j (- (donjon-yoko map) 1))
                   (case i
-                    (0 (scr-format " 武器[i]   ~a~%" (first (player-buki p))))
+                    (0 (scr-format " 武器      ~a~%" (first (player-buki p))))
                     (1 (scr-format " 回復薬    ~d個~%" (player-heal p)))
                     (2 (scr-format " ハンマー  ~d個~%" (player-hammer p)))
                     (3 (scr-format " Exp       ~d/~d~%" (player-exp p) *lv-exp*))
@@ -764,11 +764,18 @@
   (incf (player-maxagi p) (- (fourth item) (fourth (player-buki p))))
   (setf (player-buki p) item))
 
-(defun format-diff (n)
+(defun print-diff (n)
   (cond
-   ((< n 0) (format nil "↓~A" (- n)))
-   ((> n 0) (format nil "↑~A" n))
-   (t "")))
+   ((< n 0)
+    (scr-format "(")
+    (scr-format-styled '(:red :bold) "↓~A" (- n))
+    (scr-format ")"))
+   ((> n 0)
+    (scr-format "(")
+    (scr-format-styled '(:green :bold) "↑~A" n)
+    (scr-format ")"))
+   (t
+    nil)))
 
 ;;見つけた武器を装備するか
 (defun equip? (p item)
@@ -777,10 +784,13 @@
     (destructuring-bind
         (name2 str2 hp2 agi2) item
       (scr-format "「~aを見つけた」~%" name2)
-      (scr-format "攻撃力:~d~a HP:~d~a 素早さ:~d~a~%"
-                  str2 (format-diff (- str2 str1))
-                  hp2 (format-diff (- hp2 hp1))
-                  agi2 (format-diff (- agi2 agi1)))))
+      (scr-format "攻撃力:~d" str2)
+      (print-diff (- str2 str1))
+      (scr-format "  HP:~d" hp2)
+      (print-diff (- hp2 hp1))
+      (scr-format "  素早さ:~d" agi2)
+      (print-diff (- agi2 agi1))
+      (scr-format "~%")))
   (scr-format "装備[z]  捨てる[x]  袋にしまう[c]~%")
   (labels ((interact
             ()
