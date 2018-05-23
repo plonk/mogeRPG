@@ -479,8 +479,8 @@
 (defmethod monster-attack ((m yote1) (p player))
   (let ((atk (randval (yote1-atk m))))
     (case (random 2)
-      (0 (scr-format "「メタルヨテイチは 何もしていない。」~%"))
-      (1 (scr-format "「メタルヨテイチが 突然殴り掛かってきた。~d のダメージを受けた。」~%" atk)
+      (0 (scr-format "􃀸􃀹メタルヨテイチは 何もしていない。~%"))
+      (1 (scr-format "􃀸􃀹メタルヨテイチが 突然殴り掛かってきた。~d のダメージを受けた。~%" atk)
          (decf (player-hp p) atk)))))
 
 (defmethod monster-hit2 ((p player) (m yote1) x)
