@@ -774,13 +774,9 @@
 (defun print-diff (n)
   (cond
    ((< n 0)
-    (scr-format "(")
-    (scr-format-styled '(:red :bold) "↓~A" (- n))
-    (scr-format ")"))
+    (scr-format-styled '(:red :bold) "(-~A)" (- n)))
    ((> n 0)
-    (scr-format "(")
-    (scr-format-styled '(:green :bold) "↑~A" n)
-    (scr-format ")"))
+    (scr-format-styled '(:green :bold) "(+~A)" n))
    (t
     nil)))
 
@@ -793,9 +789,9 @@
       (scr-format "「􃁚􃁛~aを見つけた」~%" name2)
       (scr-format "攻撃力:~d" str2)
       (print-diff (- str2 str1))
-      (scr-format "  HP:~d" hp2)
+      (scr-format "  HP: ~d" hp2)
       (print-diff (- hp2 hp1))
-      (scr-format "  素早さ:~d" agi2)
+      (scr-format "  素早さ: ~d" agi2)
       (print-diff (- agi2 agi1))
       (scr-format "~%")))
   (scr-format "装備􃁄􃁅  捨てる􃁆􃁇  袋にしまう􃁂􃁃~%")
