@@ -739,7 +739,7 @@
 (defun main ()
   (init-charms)
   (setf *random-state* (make-random-state t))
-  (let* ((p (make-player :map 50))
+  (let* ((p (make-player :map 1))
          (map (make-donjon)))
     (init-data) ;;データ初期化
     (maze map p) ;;マップ生成
