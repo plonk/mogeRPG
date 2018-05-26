@@ -109,6 +109,7 @@
                     (scr-format "HP[1] ~d  力[2] ~d  素早さ[3] ~d~%"
                                 (player-maxhp p) (player-maxstr p) (player-maxagi p))))
        (loop while (>= (player-exp p) *lv-exp*) do
+          (fanfare)
           (let ((point (randval 3)))
             (scr-format "「レベルアップ！　ステータスポイントを ~d 獲得しました。」~%" point)
             (hoge point)
@@ -735,6 +736,38 @@
      ((= *end* 0) ;;ゲームループ
       (main-game-loop map p)))))
 
+(defun ebara ()
+  (princ "[0;2;1,~") ;; 休符を置いてみる
+  (print "[4;4;20,~")
+  (print "[4;4;19,~")
+  (print "[4;4;16,~")
+  (print "[4;4;10,~")
+  (print "[4;4;9,~")
+  (print "[4;4;17,~")
+  (print "[4;4;21,~")
+  (print "[4;12;25,~")
+  (force-output))
+
+(defun fanfare ()
+  (princ "[0;2;1,~") ;; 休符を置いてみる
+
+  (princ "[7;2;8,~")
+  (princ "[0;2;1,~")
+  (princ "[7;2;8,~")
+  (princ "[0;2;1,~")
+  (princ "[7;2;8,~")
+  (princ "[0;2;1,~")
+  (princ "[7;12;8,~")
+  (princ "[7;12;4,~")
+  (princ "[7;12;6,~")
+  (princ "[7;2;8,~")
+  (princ "[0;2;1,~")
+  (princ "[0;4;1,~")
+  (princ "[7;2;6,~")
+  (princ "[0;2;1,~")
+  (princ "[7;12;8,~")
+  (force-output))
+
 ;;ゲーム開始
 (defun main ()
   (init-charms)
@@ -751,6 +784,7 @@
   (labels ((interact ()
                      (case (read-command-char)
                        (z
+                        (ebara)
                         (if (>= (random 10) 3)
                             (setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 0)
                           (setf (aref map (+ (player-posy p) y) (+ (player-posx p) x)) 3))
