@@ -745,7 +745,7 @@
   (princ "[4;4;9,~")
   (princ "[4;4;17,~")
   (princ "[4;4;21,~")
-  (princ "[4;12;25,~")
+  (princ "[3;10;25,~")
   (force-output))
 
 (defun fanfare ()
