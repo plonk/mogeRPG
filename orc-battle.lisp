@@ -914,6 +914,11 @@
   (scr-format-reverse "~%--次へ--~%")
   (read-command-char))
 
+(defun foot-step ()
+  (princ "[0;50;0-~")
+  (princ "[50;2;240-~")
+  (force-output))
+
 ;;移動後のマップ更新
 (defun update-map (map p y x)
   (case (aref (donjon-map map) (+ (player-posy p) y) (+ (player-posx p) x))
@@ -940,6 +945,7 @@
      (if (= (mod (player-map p) 7) 0)
          (incf *monster-level*)))
     (3 ;;宝箱
+     (foot-step)
      (item-get2 p)
      (update-player-pos p x y (donjon-map map)))
     (5 ;;ボス
@@ -954,6 +960,7 @@
      (setf *battle?* t
            *boss?* 2))
     (otherwise
+     (foot-step)
      (update-player-pos p x y (donjon-map map))
      (if (= (randval 13) 1) ;;敵との遭遇確率
          (setf *battle?* t)))))
