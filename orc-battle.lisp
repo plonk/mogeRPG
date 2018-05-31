@@ -1,7 +1,7 @@
-;; 􃀠􃀡 􃀢􃀣 􃀤􃀥 􃀦􃀧 􃀨􃀩 􃀪􃀫 􃀬􃀭 􃀮􃀯 􃀰􃀱
-;; 􃀲􃀳 􃀴􃀵 􃀶􃀷 􃀸􃀹 􃀺􃀻 􃀼􃀽 􃀾􃀿 􃁀􃁁 􃁂􃁃
-;; 􃁄􃁅 􃁆􃁇 􃁈􃁉 􃁊􃁋 􃁌􃁍 􃁎􃁏 􃁐􃁑 􃁒􃁓 􃁔􃁕
-;; 􃁖􃁗 􃁘􃁙 􃁚􃁛
+;; 􃄠􃄡 􃄢􃄣 􃄤􃄥 􃄦􃄧 􃄨􃄩 􃄪􃄫 􃄬􃄭 􃄮􃄯 􃄰􃄱
+;; 􃄲􃄳 􃄴􃄵 􃄶􃄷 􃄸􃄹 􃄺􃄻 􃄼􃄽 􃄾􃄿 􃅀􃅁 􃅂􃅃
+;; 􃅄􃅅 􃅆􃅇 􃅈􃅉 􃅊􃅋 􃅌􃅍 􃅎􃅏 􃅐􃅑 􃅒􃅓 􃅔􃅕
+;; 􃅖􃅗 􃅘􃅙 􃅚􃅛
 
 (use-package :io)
 
@@ -62,7 +62,7 @@
 
 ;;コンティニューメッセージ
 (defun continue-message ()
-  (scr-format "もう一度挑戦しますか？  Yes􃁄􃁅  No􃁆􃁇~%")
+  (scr-format "もう一度挑戦しますか？  Yes􃅄􃅅  No􃅆􃅇~%")
   (case (read-command-char)
     (z (main))
     (x nil)
@@ -71,7 +71,7 @@
 ;;ゲームオーバーメッセージ
 (defun game-over-message (p)
   (gamen-clear)
-  (print-header-styled '(:warning) "🕆 Game Over 🕆")
+  (print-header-styled '(:warning) "􃅜􃅝 Game Over 􃅜􃅝")
   (scr-format "あなたは地下~d階で力尽きた。~%" (player-map p))
   (io:refresh-screen)
   (sleep 1)
@@ -127,10 +127,10 @@
       (cond
        (buki (equip? p buki))
        ((string= item "ハンマー")
-        (scr-format "「􃁖􃁗ハンマーを拾った！」~%")
+        (scr-format "「􃅖􃅗ハンマーを拾った！」~%")
         (incf (player-hammer p)))
        ((string= item "回復薬")
-        (scr-format "「􃁘􃁙回復薬を拾った！」~%")
+        (scr-format "「􃅘􃅙回復薬を拾った！」~%")
         (incf (player-heal p))))
       (setf (player-drop p) nil)))) ;;ドロップ品を消す
 
@@ -239,7 +239,7 @@
 (defun player-attack (p)
   (scr-fresh-line)
   ;;(show-player p)
-  (scr-format "~%突く􃁄􃁅  ダブルスウィング􃁆􃁇  なぎ払う􃁂􃁃  待機􃁈􃁉  回復薬􃁊􃁋~%")
+  (scr-format "~%突く􃅄􃅅  ダブルスウィング􃅆􃅇  なぎ払う􃅂􃅃  待機􃅈􃅉  回復薬􃅊􃅋~%")
   (labels ((interact ()
                      (case (read-command-char)
                        (z (atack-p p (+ 2 (randval (ash (player-str p) -1)))))
@@ -288,7 +288,7 @@
 ;;モンスター選択
 (defun pick-monster (p)
   (scr-fresh-line)
-  (scr-princ "攻撃したいモンスター番号を選択 自動:􃁄􃁅")
+  (scr-princ "攻撃したいモンスター番号を選択 自動:􃅄􃅅")
   (scr-fresh-line)
   (let ((key (read-command-char)))
     (case key
@@ -416,7 +416,7 @@
 ;;--------中ボス------------------------------------------------------------------------
 (defstruct (ha2ne2 (:include monster)) (h-atk 8))
 (defmethod monster-show ((m ha2ne2))
-  (scr-format-styled '(:boss :bold) "􃀾􃀿ボス：ハツネツエリア"))
+  (scr-format-styled '(:boss :bold) "􃄾􃄿ボス：ハツネツエリア"))
 (defmethod monster-attack ((m ha2ne2) (p player))
   (let ((x (+ 3 (randval (+ (player-level p) (ha2ne2-h-atk m))))))
     (case (random 3)
@@ -440,7 +440,7 @@
 ;;--------ボス------------------------------------------------------------------------
 (defstruct (boss (:include monster)) (boss-atk 10))
 (defmethod monster-show ((m boss))
-  (scr-format-styled '(:boss :bold) "􃀼􃀽ボス：もげぞう"))
+  (scr-format-styled '(:boss :bold) "􃄼􃄽ボス：もげぞう"))
 (defmethod monster-attack ((m boss) (p player))
   (let ((x (+ 5 (randval (+ (player-level p) (boss-boss-atk m))))))
     (case (random 5)
@@ -475,13 +475,13 @@
 ;;(push #'make-yote1 *monster-builders*)
 
 (defmethod monster-show ((m yote1))
-  (scr-format-styled '(:level_1 :bold) "􃀸􃀹メタルヨテイチ"))
+  (scr-format-styled '(:level_1 :bold) "􃄸􃄹メタルヨテイチ"))
 
 (defmethod monster-attack ((m yote1) (p player))
   (let ((atk (randval (yote1-atk m))))
     (case (random 2)
-      (0 (scr-format "􃀸􃀹メタルヨテイチは 何もしていない。~%"))
-      (1 (scr-format "􃀸􃀹メタルヨテイチが 突然殴り掛かってきた。~d のダメージを受けた。~%" atk)
+      (0 (scr-format "􃄸􃄹メタルヨテイチは 何もしていない。~%"))
+      (1 (scr-format "􃄸􃄹メタルヨテイチが 突然殴り掛かってきた。~d のダメージを受けた。~%" atk)
          (decf (player-hp p) atk)))))
 
 (defmethod monster-hit2 ((p player) (m yote1) x)
@@ -501,10 +501,10 @@
 (defmethod monster-show ((m orc))
   (let ((x (orc-club-level m)))
     (cond
-     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "􃀺􃀻か弱いオーク"))
-     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "􃀺􃀻日焼けしたオーク"))
-     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "􃀺􃀻邪悪なオーク"))
-     (t          (scr-format-styled '(:level_4 :bold) "􃀺􃀻マッチョオーク")))))
+     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "􃄺􃄻か弱いオーク"))
+     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "􃄺􃄻日焼けしたオーク"))
+     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "􃄺􃄻邪悪なオーク"))
+     (t          (scr-format-styled '(:level_4 :bold) "􃄺􃄻マッチョオーク")))))
 
 (defmethod monster-attack ((m orc) (p player))
   (let ((x (randval (orc-club-level m))))
@@ -519,10 +519,10 @@
 (defmethod monster-show ((m hydra))
   (let ((x (monster-health m)))
     (cond
-     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "􃀲􃀳意地悪なヒドラ"))
-     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "􃀲􃀳腹黒いヒドラ"))
-     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "􃀲􃀳強欲なヒドラ"))
-     (t          (scr-format-styled '(:level_4 :bold) "􃀲􃀳グレートヒドラ")))))
+     ((>= 3 x 1) (scr-format-styled '(:level_1 :bold) "􃄲􃄳意地悪なヒドラ"))
+     ((>= 6 x 4) (scr-format-styled '(:level_2 :bold) "􃄲􃄳腹黒いヒドラ"))
+     ((>= 9 x 7) (scr-format-styled '(:level_3 :bold) "􃄲􃄳強欲なヒドラ"))
+     (t          (scr-format-styled '(:level_4 :bold) "􃄲􃄳グレートヒドラ")))))
 
 (defmethod monster-attack ((m hydra) (p player))
   (let ((x (randval (ash (monster-health m) -1))))
@@ -540,10 +540,10 @@
 (defmethod monster-show ((m slime-mold))
   (let ((x (slime-mold-sliminess m)))
     (cond
-     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "􃀴􃀵ベタベタなスライム"))
-     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "􃀴􃀵ベトベトなスライム"))
-     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "􃀴􃀵ベチョベチョなスライム"))
-     (t          (scr-format-styled '(:level_4 :bold) "􃀴􃀵ヌルヌルなスライム")))))
+     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "􃄴􃄵ベタベタなスライム"))
+     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "􃄴􃄵ベトベトなスライム"))
+     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "􃄴􃄵ベチョベチョなスライム"))
+     (t          (scr-format-styled '(:level_4 :bold) "􃄴􃄵ヌルヌルなスライム")))))
 
 (defmethod monster-attack ((m slime-mold) (p player))
   (let ((x (randval (slime-mold-sliminess m))))
@@ -569,10 +569,10 @@
 (defmethod monster-show ((m brigand))
   (let ((x (brigand-atk m)))
     (cond
-     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "􃀶􃀷毛の薄いブリガンド"))
-     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "􃀶􃀷ひげもじゃなブリガンド"))
-     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "􃀶􃀷胸毛の濃いブリガンド"))
-     (t          (scr-format-styled '(:level_4 :bold) "􃀶􃀷禿げてるブリガンド")))))
+     ((<= 1 x 3) (scr-format-styled '(:level_1 :bold) "􃄶􃄷毛の薄いブリガンド"))
+     ((<= 4 x 6) (scr-format-styled '(:level_2 :bold) "􃄶􃄷ひげもじゃなブリガンド"))
+     ((<= 7 x 9) (scr-format-styled '(:level_3 :bold) "􃄶􃄷胸毛の濃いブリガンド"))
+     (t          (scr-format-styled '(:level_4 :bold) "􃄶􃄷禿げてるブリガンド")))))
 
 (defmethod monster-attack ((m brigand) (p player))
   (let ((x (max (player-hp p) (player-agi p) (player-str p)))
@@ -598,8 +598,8 @@
 ;;オート回復薬メッセージ
 (defun show-auto-heal (p)
   (if (null (player-auto-heal p))
-      (scr-format "オート回復薬􃁎􃁏 OFF~%")
-    (scr-format "オート回復薬􃁎􃁏 HPが~d%以下で回復~%" (player-auto-heal p))))
+      (scr-format "オート回復薬􃅎􃅏 OFF~%")
+    (scr-format "オート回復薬􃅎􃅏 HPが~d%以下で回復~%" (player-auto-heal p))))
 
 ;;文字幅取得
 (defun moge-char-width (char)
@@ -627,7 +627,7 @@
                     (number->a x) (minimum-column 18 (first buki)) (second buki)
                     (third buki) (fourth buki)))
   (scr-format "アルファベットを選ぶと装備します~%")
-  (scr-format "戻る􃁄􃁅")
+  (scr-format "戻る􃅄􃅅")
   (let ((x (ascii->number (read-command-char))))
     (cond
      ((and (integerp x) (<= 0 x 24) (< x (length (player-item p))))
@@ -666,15 +666,15 @@
 
 (defun map-type (num)
   (case num
-    (30 "􃀠􃀡") ;; 壁
-    (0  "􃀢􃀣")
-    (1  "􃀤􃀥") ;; プレイヤーの位置
+    (30 "􃄠􃄡") ;; 壁
+    (0  "􃄢􃄣")
+    (1  "􃄤􃄥") ;; プレイヤーの位置
     (4  "薬") ;; 薬
-    (5  "􃀪􃀫") ;; ボス
-    (3  "􃀨􃀩") ;; 宝箱
-    (2  "􃀦􃀧") ;; 下り階段
-    (6  "􃀬􃀭") ;; イベント
-    (7  "􃀮􃀯") ;; 中ボス ハツネツエリア
+    (5  "􃄪􃄫") ;; ボス
+    (3  "􃄨􃄩") ;; 宝箱
+    (2  "􃄦􃄧") ;; 下り階段
+    (6  "􃄬􃄭") ;; イベント
+    (7  "􃄮􃄯") ;; 中ボス ハツネツエリア
     ))
 
 (defun char-style (char)
@@ -700,13 +700,13 @@
                 (scr-format-styled (char-style char) char))
               (if (= j (- (donjon-yoko map) 1))
                   (case i
-                    (0 (scr-format " 􃁚􃁛武器      ~a~%" (first (player-buki p))))
-                    (1 (scr-format " 􃁘􃁙回復薬    ~d個~%" (player-heal p)))
-                    (2 (scr-format " 􃁖􃁗ハンマー  ~d個~%" (player-hammer p)))
+                    (0 (scr-format " 􃅚􃅛武器      ~a~%" (first (player-buki p))))
+                    (1 (scr-format " 􃅘􃅙回復薬    ~d個~%" (player-heal p)))
+                    (2 (scr-format " 􃅖􃅗ハンマー  ~d個~%" (player-hammer p)))
                     (3 (scr-format " Exp         ~d/~d~%" (player-exp p) *lv-exp*))
-                    (5 (scr-format " 持ち物 􃁐􃁑~%"))
-                    (6 (scr-format " 薬を使う􃁊􃁋~%"))
-                    (7 (scr-format " 終わる􃁀􃁁~%"))
+                    (5 (scr-format " 持ち物 􃅐􃅑~%"))
+                    (6 (scr-format " 薬を使う􃅊􃅋~%"))
+                    (7 (scr-format " 終わる􃅀􃅁~%"))
                     (otherwise (scr-fresh-line))))))
   (show-msg p))
 
@@ -780,7 +780,7 @@
 
 ;;壁破壊
 (defun kabe-break (map p y x)
-  (scr-format "「ハンマーで壁を壊しますか？」 Yes􃁄􃁅  No􃁆􃁇~%")
+  (scr-format "「ハンマーで壁を壊しますか？」 Yes􃅄􃅅  No􃅆􃅇~%")
   (labels ((interact ()
                      (case (read-command-char)
                        (z
@@ -820,7 +820,7 @@
       (name1 str1 hp1 agi1) (player-buki p)
     (destructuring-bind
         (name2 str2 hp2 agi2) item
-      (scr-format "「􃁚􃁛~aを見つけた」~%" name2)
+      (scr-format "「􃅚􃅛~aを見つけた」~%" name2)
       (scr-format "攻撃力:~d" str2)
       (print-diff (- str2 str1))
       (scr-format "  HP: ~d" hp2)
@@ -828,17 +828,17 @@
       (scr-format "  素早さ: ~d" agi2)
       (print-diff (- agi2 agi1))
       (scr-format "~%")))
-  (scr-format "装備􃁄􃁅  捨てる􃁆􃁇  袋にしまう􃁂􃁃~%")
+  (scr-format "装備􃅄􃅅  捨てる􃅆􃅇  袋にしまう􃅂􃅃~%")
   (labels ((interact
             ()
             (case (read-command-char)
               (z
-               (scr-format "「􃁚􃁛~aを装備した。」~%" (first item))
+               (scr-format "「􃅚􃅛~aを装備した。」~%" (first item))
                (if (not (string= "なし" (first (player-buki p))))
                    (push (player-buki p) (player-item p)))
                (equip-buki item p))
               (x
-               (scr-format "「􃁚􃁛~aを見なかったことにした。」~%" (first item)))
+               (scr-format "「􃅚􃅛~aを見なかったことにした。」~%" (first item)))
               (c
                (push item (player-item p)))
               (otherwise
@@ -846,11 +846,11 @@
     (interact)))
 
 (defun hummer-get (p)
-  (setf (player-msg p) "「􃁖􃁗ハンマーを見つけた。」")
+  (setf (player-msg p) "「􃅖􃅗ハンマーを見つけた。」")
   (incf (player-hammer p)))
 
 (defun kusuri-get (p)
-  (setf (player-msg p) "「􃁘􃁙回復薬を見つけた。」")
+  (setf (player-msg p) "「􃅘􃅙回復薬を見つけた。」")
   (incf (player-heal p)))
 
 ;;重み付け抽選-----------------------------------------------
@@ -1108,5 +1108,5 @@
     (map-move map p)))
 
 (defun show-map-key ()
-  (scr-format "􃁊􃁋薬を使う 􃁌􃁍終わる: ~%"))
+  (scr-format "􃅊􃅋薬を使う 􃅌􃅍終わる: ~%"))
 
