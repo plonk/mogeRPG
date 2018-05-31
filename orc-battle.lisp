@@ -1009,13 +1009,12 @@
     (if old-record
 	(if (>= total-seconds (cadr old-record))
 	    ranking
-	  (let ((ranking1 (stable-sort
-			   (mapcar (lambda (entry)
+	  (let* ((ranking1 (mapcar (lambda (entry)
 				     (if (string-equal (car entry) name)
 					 (list name total-seconds)
 				       entry))
-				   ranking)
-			   #'< :key #'cadr)))
+				   ranking))
+		 (ranking2 (stable-sort ranking1 #'< :key #'cadr)))
 	    (take +ranking-max-length+ ranking1)))
       ;; 同じタイムは後ろに追加する。早い者勝ち。
       (take +ranking-max-length+
