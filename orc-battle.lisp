@@ -995,27 +995,31 @@
          (s (mod ss 60)))
     (list h m s)))
 
+(defun take (n ls)
+  (if (or (null ls) (= n 0))
+      ls
+    (cons (car ls) (take (- n 1) (cdr ls)))))
+
 ;; プレーヤー name の記録 total-seconds を ranking に登録し、新しいラ
 ;; ンキングデータを返す。ranking に既にプレーヤーの項目がある場合は、
 ;; 秒数が少なければ項目を更新する。項目の数が +ranking-max-length+ を
 ;; 超えると、超えた分は削除される。
 (defun ranking-update (name total-seconds ranking)
-  (let ((ranking1
-         (stable-sort
-          (if (and (assoc name ranking :test #'string-equal)
-                   (< total-seconds (cadr (assoc name ranking :test #'string-equal))))
-              (mapcar (lambda (entry)
-                        (if (string-equal (car entry) name)
-                            (list name total-seconds)
-                          entry))
-                      ranking)
-            ;; 同じタイムは後ろに追加する。早い者勝ち。
-            (append ranking (list (list name total-seconds))))
-          #'< :key #'cadr)))
-    ;; 最大で +ranking-max-length+ の項目を返す。
-    (loop for i from 1 to +ranking-max-length+
-          for entry in ranking1
-          collect entry)))
+  (let ((old-record (assoc name ranking :test #'string-equal)))
+    (if old-record
+	(if (>= total-seconds (cadr old-record))
+	    ranking
+	  (let ((ranking1 (stable-sort
+			   (mapcar (lambda (entry)
+				     (if (string-equal (car entry) name)
+					 (list name total-seconds)
+				       entry))
+				   ranking)
+			   #'< :key #'cadr)))
+	    (take +ranking-max-length+ ranking1)))
+      ;; 同じタイムは後ろに追加する。早い者勝ち。
+      (take +ranking-max-length+
+	    (append ranking (list (list name total-seconds)))))))
 
 ;; ランキングの内容を表示する。name を指定すると該当の項目の左に矢印が
 ;; 表示される。
