@@ -132,7 +132,7 @@
   (clearok *stdscr* 1)
   (scrollok *stdscr* 1)
   (keypad *stdscr* 1)
-  (raw)
+  (cbreak)
   (noecho)
   (unless (= 1 (has-colors))
     (print "Error: color support not available")

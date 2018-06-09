@@ -68,12 +68,24 @@
     (x nil)
     (otherwise (continue-message))))
 
+(defun game-over-tune ()
+  (princ "[50;400;12-~")
+  (princ "[50;400;8-~")
+  (princ "[50;400;5-~")
+  (princ "[50;400;3-~")
+  (princ "[40;1200;2-~")
+  (princ "[50;380;3-~")
+  (princ "[0;20;3-~")
+  (princ "[50;1600;3-~")
+  (force-output))
+
 ;;ゲームオーバーメッセージ
 (defun game-over-message (p)
   (gamen-clear)
   (print-header-styled '(:warning) "􃅜􃅝 Game Over 􃅜􃅝")
   (scr-format "あなたは地下~d階で力尽きた。~%" (player-map p))
   (io:refresh-screen)
+  (game-over-tune)
   (sleep 1)
   (io:flush-input)
   (continue-message))
@@ -109,7 +121,6 @@
                     (scr-format "HP[1] ~d  力[2] ~d  素早さ[3] ~d~%"
                                 (player-maxhp p) (player-maxstr p) (player-maxagi p))))
        (loop while (>= (player-exp p) *lv-exp*) do
-          (fanfare)
           (let ((point (randval 3)))
             (scr-format "「レベルアップ！　ステータスポイントを ~d 獲得しました。」~%" point)
             (hoge point)
@@ -154,6 +165,7 @@
     (game-over-message p)
     (setf *end* 2))
    (t ;;(monsters-dead) 敵を倒したとき
+    (fanfare)
     (item-drop? p) ;;アイテム入手処理
     (level-up p) ;;レベルアップ処理
     (cond
@@ -172,17 +184,46 @@
   (scr-format "次へ = z")
   (read-command-char))
 
-(defun print-header (str)
+(defun pad-centered (str cols)
   (let* ((w (string-width str))
-         (margin-width (truncate (- 78 w) 2))
-         (space (make-string margin-width :initial-element #\Space)))
-    (scr-format-reverse "~A~A~A~%" space str space)))
+         (left-margin (floor (/ (- cols w) 2)))
+         (right-margin (ceiling (/ (- cols w) 2)))
+         (left (make-string left-margin :initial-element #\Space))
+         (right (make-string right-margin :initial-element #\Space)))
+    (format nil "~A~A~A" left str right)))
+
+(defun print-header (str)
+  (scr-format-reverse "~A~%" (pad-centered str charms/ll:*COLS*)))
 
 (defun print-header-styled (styles str)
-  (let* ((w (string-width str))
-         (margin-width (truncate (- 78 w) 2))
-         (space (make-string margin-width :initial-element #\Space)))
-    (scr-format-styled styles "~A~A~A~%" space str space)))
+  (scr-format-styled styles "~A~%" (pad-centered str charms/ll:*COLS*)))
+
+(defun monster-turn-tune ()
+  (princ "[50;30;8-~")
+  (princ "[50;30;252-~")
+  (princ "[50;30;7-~")
+  (princ "[50;30;251-~")
+  (princ "[50;30;6-~")
+  (princ "[50;30;250-~")
+  (princ "[50;30;5-~")
+  (princ "[50;30;249-~")
+  (princ "[50;30;4-~")
+  (princ "[50;30;248-~")
+  (princ "[50;30;3-~")
+  (princ "[50;30;247-~")
+  (princ "[50;30;8-~")
+  (princ "[50;30;252-~")
+  (princ "[50;30;7-~")
+  (princ "[50;30;251-~")
+  (princ "[50;30;6-~")
+  (princ "[50;30;250-~")
+  (princ "[50;30;5-~")
+  (princ "[50;30;249-~")
+  (princ "[50;30;4-~")
+  (princ "[50;30;248-~")
+  (princ "[50;30;3-~")
+  (princ "[50;30;247-~")
+  (force-output))
 
 ;;バトル時、プレイヤーが死ぬかモンスターが全滅するまでループ
 (defun game-loop (p)
@@ -210,6 +251,7 @@
       (gamen-clear)
       (show-player p)
       (print-header-styled '(:warning) "敵のターン")
+      (monster-turn-tune)
       (map 'list
            (lambda (m)
              (or (monster-dead m) (monster-attack m p)))
@@ -230,9 +272,37 @@
               (player-hp p) (player-maxhp p)
               (player-str p) (player-maxstr p)
               (player-agi p) (player-maxagi p)))
+
+(defun hit-tune ()
+  (princ "[0;30;247-~")
+  (princ "[50;30;247-~")
+  (princ "[0;30;247-~")
+  (princ "[50;30;3-~")
+  (force-output))
+
+(defun nagiharai-tune ()
+  (princ "[0;30;3-~")
+  (princ "[50;30;3-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;15-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;3-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;15-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;3-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;15-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;3-~")
+  (princ "[0;30;3-~")
+  (princ "[50;30;15-~")
+  (force-output))
+
 ;;
 (defun atack-p (p x)
   (let ((m (pick-monster p)))
+    (hit-tune)
     (monster-hit2 p m x)))
 
 ;;攻撃方法
@@ -250,6 +320,7 @@
                               (scr-format "~%2体目のモンスターを選んでください~%")
                               (atack-p p x))))
                        (c
+                        (nagiharai-tune)
                         (dotimes (x (1+ (randval (truncate (/ (player-str p) 3)))))
                           (unless (monsters-dead)
                             (monster-hit2 p (random-monster) 1))))
@@ -421,20 +492,20 @@
   (let ((x (+ 3 (randval (+ (player-level p) (ha2ne2-h-atk m))))))
     (case (random 3)
       (0
-       (scr-format "「ハツネツの攻撃。~dのダメージをくらった。」~%" x)
+       (scr-format "􃄾􃄿ハツネツの攻撃。~dのダメージをくらった。~%" x)
        (decf (player-hp p) x))
       (1
        (let ((dame-str (- (player-str p) x)))
          (if (= (player-str p) 0)
-             (progn (scr-format "「ネコPパンチ。HPが ~d 下がった。」~%" x)
+             (progn (scr-format "􃄾􃄿ネコPパンチ。HPが ~d 下がった。~%" x)
                     (decf (player-hp p) x))
            (if (>= dame-str 0)
-               (progn (scr-format "「ネコPパンチ。力が ~d 下がった。」~%" x)
+               (progn (scr-format "􃄾􃄿ネコPパンチ。力が ~d 下がった。~%" x)
                       (decf (player-str p) x))
-             (progn (scr-format "「ネコPパンチ。力が ~d 下がった。」~%" (player-str p))
+             (progn (scr-format "􃄾􃄿ネコPパンチ。力が ~d 下がった。~%" (player-str p))
                     (setf (player-str p) 0))))))
       (2
-       (scr-format "「ハツネツが料理してご飯を食べている。ハツネツのHPが ~d 回復した！」~%" x)
+       (scr-format "􃄾􃄿ハツネツが料理してご飯を食べている。ハツネツのHPが ~d 回復した！~%" x)
        (incf (monster-health m) x)))))
 
 ;;--------ボス------------------------------------------------------------------------
@@ -445,22 +516,22 @@
   (let ((x (+ 5 (randval (+ (player-level p) (boss-boss-atk m))))))
     (case (random 5)
       ((0 3)
-       (scr-format "「もげぞうの攻撃。~d のダメージをくらった。」~%" x)
+       (scr-format "􃄼􃄽もげぞうの攻撃。~d のダメージをくらった。~%" x)
        (decf (player-hp p) x))
       ((1 4)
        (let ((dame-agi (- (player-agi p) x)))
          (if (= (player-agi p) 0)
-             (progn (scr-format "「もげぞうの攻撃。~d のダメージをくらった。」~%" x)
+             (progn (scr-format "􃄼􃄽もげぞうの攻撃。~d のダメージをくらった。~%" x)
                     (decf (player-hp p) x))
            (if (>= dame-agi 0)
-               (progn (scr-format "「もげぞうの不思議な踊り。素早さが ~d 下がった。」~%" x)
+               (progn (scr-format "􃄼􃄽もげぞうの不思議な踊り。素早さが ~d 下がった。~%" x)
                       (decf (player-agi p) x))
-             (progn (scr-format "「もげぞうの不思議な踊り。素早さが ~d 下がった。」~%" (player-agi p))
+             (progn (scr-format "􃄼􃄽もげぞうの不思議な踊り。素早さが ~d 下がった。~%" (player-agi p))
                     (setf (player-agi p) 0))))))
       (2
        (let ((dame-agi (- (player-agi p) x))
              (dame-str (- (player-str p) x)))
-         (scr-format "「もげぞうのなんかすごい攻撃！ すべてのステータスが ~d 下がった！」~%" x)
+         (scr-format "􃄼􃄽もげぞうのなんかすごい攻撃！ すべてのステータスが ~d 下がった！~%" x)
          (decf (player-hp p) x)
          (if (>= dame-agi 0)
              (decf (player-agi p) x)
@@ -738,41 +809,49 @@
 
 (defun ebara ()
   (princ "[0;60;0-~") ;; 休符を置いてみる
-  (princ "[50;150;10-~")
-  (princ "[50;150;9-~")
-  (princ "[50;150;6-~")
-  (princ "[50;150;0-~")
-  (princ "[50;150;255-~")
-  (princ "[50;150;7-~")
-  (princ "[50;150;11-~")
-  (princ "[50;270;15-~")
+  (princ "[40;150;10-~")
+  (princ "[40;150;9-~")
+  (princ "[40;150;6-~")
+  (princ "[40;150;0-~")
+  (princ "[40;150;255-~")
+  (princ "[40;150;7-~")
+  (princ "[40;150;11-~")
+  (princ "[40;270;15-~")
+  (force-output))
+
+(defun gomadare ()
+  (princ "[0;60;0-~") ;; 休符を置いてみる
+  (princ "[40;150;0-~")
+  (princ "[40;150;1-~")
+  (princ "[40;150;2-~")
+  (princ "[40;450;3-~")
   (force-output))
 
 (defun fanfare ()
   (princ "[0;2;1,~") ;; 休符を置いてみる
 
-  (princ "[7;2;8,~")
+  (princ "[4;2;8,~")
   (princ "[0;2;1,~")
-  (princ "[7;2;8,~")
+  (princ "[4;2;8,~")
   (princ "[0;2;1,~")
-  (princ "[7;2;8,~")
+  (princ "[4;2;8,~")
   (princ "[0;2;1,~")
-  (princ "[7;12;8,~")
-  (princ "[7;12;4,~")
-  (princ "[7;12;6,~")
-  (princ "[7;2;8,~")
+  (princ "[4;12;8,~")
+  (princ "[4;12;4,~")
+  (princ "[4;12;6,~")
+  (princ "[4;2;8,~")
   (princ "[0;2;1,~")
   (princ "[0;4;1,~")
-  (princ "[7;2;6,~")
+  (princ "[4;2;6,~")
   (princ "[0;2;1,~")
-  (princ "[7;12;8,~")
+  (princ "[4;12;8,~")
   (force-output))
 
 ;;ゲーム開始
 (defun main ()
   (init-charms)
   (setf *random-state* (make-random-state t))
-  (let* ((p (make-player :map 1))
+  (let* ((p (make-player))
          (map (make-donjon)))
     (init-data) ;;データ初期化
     (maze map p) ;;マップ生成
@@ -908,6 +987,7 @@
 (defun moge-event (p)
   (if (equal (car (player-buki p)) "もげぞーの剣")
       (progn
+        (gomadare)
         (scr-format "~%「もげぞーの剣が輝き出し、もげぞうの剣に進化した！」~%")
         (equip-buki (assoc "もげぞうの剣" *event-buki* :test #'equal) p))
     (scr-format "~%「なにも起こらなかった。」~%"))
@@ -915,8 +995,20 @@
   (read-command-char))
 
 (defun foot-step ()
-  (princ "[0;50;0-~")
-  (princ "[50;2;240-~")
+  ;; (princ "[0;50;0-~")
+  ;; (princ "[100;2;240-~")
+  ;; (force-output)
+  )
+
+(defun kaidan-tune ()
+  (princ "[0;100;0-~")
+  (princ "[100;2;208-~")
+  (princ "[0;250;0-~")
+  (princ "[100;2;206-~")
+  (princ "[0;250;0-~")
+  (princ "[100;2;220-~")
+  (princ "[0;250;0-~")
+  (princ "[100;2;218-~")
   (force-output))
 
 ;;移動後のマップ更新
@@ -933,6 +1025,7 @@
     ;; (incf (player-heal p))
     ;; (update-player-pos p x y (donjon-map map)))
     (2 ;;くだり階段
+     (kaidan-tune)
      (incf (player-map p))
      (maze map p)
      ;;２階降りるごとにハンマーもらえる
@@ -978,10 +1071,18 @@
      (when first-move?
        (update-map map p y x)))))
 
+(defun use-heal-tune ()
+  (princ "[50;50;3-~")
+  (princ "[50;50;7-~")
+  (princ "[50;50;10-~")
+  (princ "[50;50;15-~")
+  (force-output))
+
 ;;薬を使う
 (defun use-heal (p)
   (cond
    ((>= (player-heal p) 1)
+    (use-heal-tune)
     (scr-format "~%「回復薬を使った。」~%")
     (decf (player-heal p))
     (setf (player-hp p)  (player-maxhp p)
@@ -1034,7 +1135,7 @@
         for entry in ranking
         do
         (destructuring-bind (entry-name total-seconds) entry
-          (destructuring-bind (h m s) (total-seconds-to-hms total-seconds)
+          (destructuring-bind (h m s) (total-seconds-to-hms to2tal-seconds)
             (let ((arrow (if (string-equal entry-name name) "=>" "  ")))
               (scr-format "~a ~a位 ~2,'0d:~2,'0d:~2,'0d ~a~%"
                           arrow place h m s entry-name))))))
@@ -1067,7 +1168,7 @@
 ;; メッセージ message を表示し、ユーザーから 1 あるいは 2 を受け取る。
 ;; 1 を受け取れば t を、2を受け取れば nil を返す。それ以外はループ
 (defun yes-no-dialog (message)
-  (scr-format "~a  Yes􃁄􃁅  No􃁆􃁇~%" message)
+  (scr-format "~a  Yes􃅄􃅅  No􃅆􃅇~%" message)
   (case (read-command-char)
     (z t)
     (x nil)
